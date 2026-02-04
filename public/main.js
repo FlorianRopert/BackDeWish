@@ -39,25 +39,27 @@ window.onload = () => {
                 usersList.appendChild(option);
 
             });
-            
-       
+
+
         });
     voteRN();
 };
-    voter.addEventListener('click', () => {
-        fetch('/Vote', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ inputValue: vote.value })
-        }).then(response => response.text())
-            .then(data => {
-                alert(data);
 
-            })
-        console.log(vote.value);
-    });
+
+voter.addEventListener('click', () => {
+    fetch('/Vote', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ inputValue: vote.value, inputElecteur: localStorage.getItem('userId') })
+    }).then(response => response.text())
+        .then(data => {
+            alert(data);
+
+        })
+    console.log(vote.value);
+});
 
 function voteRN() {
     const usersList = document.getElementById('vote');
@@ -82,3 +84,23 @@ function voteRN() {
             });
         })
 }
+const loginButton = document.getElementById('loginbutton');
+const loginInput = document.getElementById('loginintput');
+const passwordInput = document.getElementById('passwordinput');
+loginButton.addEventListener('click', () => {
+
+
+    fetch('/connexion', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ login: loginInput.value, password: passwordInput.value })
+    })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            alert("ID utilisateur : " + data.user.id);
+            localStorage.setItem('userId', data.user.id);
+        });
+});
